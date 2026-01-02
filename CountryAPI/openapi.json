@@ -1,0 +1,173 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CountryAPI",
+    "version": "1.0.0",
+    "description": "CountryAPI"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:7800/countryapi/v1"
+    }
+  ],
+  "paths": {
+    "/countries": {
+      "get": {
+        "summary": "Get all countries",
+        "operationId": "getCountries",      
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paged array of countries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Countries"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a country to the list of countries",
+        "operationId": "postCountries",      
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Country"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Null response"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/countries/{countryName}": {
+      "get": {
+        "summary": "Info for a specific country",
+        "operationId": "getCountryName",
+        "parameters": [
+          {
+            "name": "countryName",
+            "in": "path",
+            "required": true,
+            "description": "The name of the country to retrieve",
+            "schema": {
+              "$ref": "#/components/schemas/countryName"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Expected response to a valid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Country"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Country": {
+        "type": "object",
+        "required": [
+          "name",
+          "abbreviation",
+          "capital",
+          "population"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "abbreviation": {
+            "type": "string"
+          },
+          "capital": {
+            "type": "string"
+          },
+          "population": {
+            "type": "integer"
+          }
+        }
+      },
+      "Countries": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Country"
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "limit": {
+        "type": "integer"
+      },
+      "countryName": {
+        "type": "string"
+      }
+    }
+  }
+}
